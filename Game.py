@@ -2,6 +2,7 @@ import pygame
 import sys
 import random
 import math
+#jshdkad
 
 WIDTH = 900
 HEIGHT = 390
