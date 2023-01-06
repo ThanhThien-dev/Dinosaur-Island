@@ -2,7 +2,6 @@ import pygame
 import sys
 import random
 import math
-#jshdkad
 
 WIDTH = 900
 HEIGHT = 390
@@ -25,8 +24,45 @@ pygame.display.set_icon(icon)
 # Tạo lớp Background
 class BG:
     
-    # Phương thức khởi tạo
+    """
+    Chức năng: Tạo một hình nền cho game.
+    
+    Args:
+        x: Tọa độ x của hình nền.
+    
+    Input:
+        width: Chiều rộng của hình nền.
+        height: Chiều cao của hình nền.
+        x: Tọa độ x của hình nền.
+        y: Tọa độ y của hình nền.
+        texture (Surface): Đối tượng Surface tạo từ hình ảnh của hình nền.
+    
+    Output:
+        update(def_x): Cập nhật trạng thái của hình nền theo biến speed được khai báo ở class game di chuyển theo trục x.
+        show(): Hiển thị hình nền lên màn hình.
+        set_texture(): Tạo ra một đối tượng Surface từ hình ảnh của hình nền và lưu trữ trong thuộc tính self.texture.
+    """
+    
+    # Hàm khởi tạo
     def __init__(self, x):
+        
+        """
+            Chức năng: Tạo một đối tượng hình nền với tọa độ x cho trước và tạo ra một đối tượng Surface từ hình ảnh của hình nền.
+        
+        Args:
+            x: Tọa độ x của hình nền dùng để tạo vòng lặp.
+            
+        Input:
+            width: Chiều rộng của hình nền.
+            height: Chiều cao của hình nền.
+            x: Tọa độ x của hình nền.
+            y: Tọa độ y của hình nền.
+            texture (Surface): Đối tượng Surface tạo từ hình ảnh của hình nền.
+        
+        Output:
+            BG: Đối tượng hình nền với thuộc tính width, height, x, y, texture được khởi tạo.
+        """
+    
         self.width = WIDTH
         self.height = HEIGHT
         self.x = x
@@ -34,23 +70,77 @@ class BG:
         self.set_texture()
         self.show()
         
-    # Phương thức cập nhật
+    # Hàm cập nhật
     def update(self, def_x):
+        
+        """
+        Chức năng: Cập nhật tọa độ x của hình nền theo biến speed được khai báo ở class game di chuyển theo trục x. Nếu tọa độ x của hình nền nhỏ hơn hoặc bằng -WIDTH, thì sẽ đặt lại tọa độ x bằng WIDTH.
+        
+        Input:
+            def_x: Độ dịch cần cập nhật tọa độ x.
+        
+        Output:
+            x: Tọa độ x của hình nền.
+        """
+        
         self.x += def_x
         if self.x <= -WIDTH:
             self.x = WIDTH
     
-    # Phương thức hiển thị    
+    # Hàm hiển thị    
     def show(self):
+        
+        """
+        Chức năng: Sử dụng phương thức blit() của module pygame để hiển thị đối tượng Surface của hình nền lên màn hình tại tọa độ x và y.
+        
+        Attributes:
+            x: Tọa độ x của hình nền.
+            y: Tọa độ y của hình nền.
+            texture (Surface): Đối tượng Surface tạo từ hình ảnh của hình nền.
+        """
+        
         screen.blit(self.texture, (self.x, self.y))
     
-    # Phương thức kết cấu    
+    # Hàm surface dùng để load hình ảnh
     def set_texture(self):
+        
+        """
+        Chức năng: Phương thức này dùng để load hình ảnh background vào chương trình.
+        
+        Input:
+            Hình ảnh bg.png
+            
+        Output:
+            Hình ảnh background
+        """
+        
         self.texture = pygame.image.load(r'assets\img\bg.png')
         
 # Tạo lớp Dino
 class Dino:
     
+    """
+    Chức năng: Class đại diện cho nhân vật khủng long trong game. Nó dùng để định nghĩa các phương thức khởi tạo, cập nhật, hiển thị
+    , tạo đối tượng Surface từ hình ảnh và tạo đối tượng Sound từ âm thanh của nhân vật khủng long, cũng như các phương thức nhảy, rơi và chạy.
+    
+    Attributes:
+        width (int): Chiều rộng của nhân vật khủng long.
+        height (int): Chiều cao của nhân vật khủng long.
+        x (int): Tọa độ x của nhân vật khủng long.
+        y (int): Tọa độ y của nhân vật khủng long.
+        img_num (int): Số thứ tự của hình ảnh hiện tại của nhân vật khủng long.
+        def_y (int): Độ dịch theo trục y khi nhân vật khủng long nhảy.
+        gra (float): Trọng lực của nhân vật khủng long.
+        running (bool): Trạng thái đang chạy trên mặt đất.
+        jumping (bool): Trạng thái đang nhảy.
+        falling (bool): Trạng thái đang rơi.
+        jump_to (int): Độ cao tối đa mà khủng long nhảy đến.
+        floor (int): Định nghĩa tọa độ y của sàn.
+        texture (pygame.Surface): Đối tượng Surface đại diện cho hình ảnh của nhân vật khủng long.
+        sound (pygame.mixer.Sound): Đối tượng Sound đại diện cho âm thanh của nhân vật khủng long.
+    """
+    
+    # Hàm khởi tạo
     def __init__(self):
         self.width = 64
         self.height = 68
@@ -68,7 +158,22 @@ class Dino:
         self.set_sound()
         self.show()
     
+    # Hàm cập nhật
     def update(self, loop):
+        
+        """
+        Chức năng: Phương thức này cập nhật trạng thái nhảy, đáp đất và chạy của đối tượng Dino dựa trên trạng thái hiện tại và tọa độ y 
+        của nó. Nếu đối tượng Dino đang nhảy, tọa độ y của nó sẽ bị giảm bằng khoảng trừ tọa độ y. Nếu đối tượng Dino đang đáp đất, tọa 
+        độ y của nó sẽ tăng bằng tích của trọng lực và khoảng trừ tọa độ y. Nếu đối tượng Dino đang chạy và số vòng lặp hiện tại 
+        chia hết cho 4, hình ảnh của đối tượng Dino sẽ thay đổi tạo ra hoạt ảnh.
+        
+        Args:
+        loop (int): Số vòng lặp hiện tại.
+        
+        Returns:
+            Trả về các trạng thái và thực hiện hành động ở trạng thái đó
+        """
+        
         # Trạng thái đang nhảy
         if self.jumping:
             self.y -= self.def_y
@@ -86,36 +191,108 @@ class Dino:
             self.img_num = (self.img_num + 1) % 9 # Giống như một vòng lặp, self.img_num có giá trị lớn hơn 8, nó sẽ được gán lại bằng 0.
             self.set_texture()
     
+    # Hàm hiển thị
     def show(self):
+        
+        """
+        Chức năng: Sử dụng phương thức blit() của module pygame để hiển thị đối tượng Surface của nhân vật Dino lên màn hình tại tọa độ x và y.
+        
+        Attributes:
+            x: Tọa độ x của nhân vật Dino.
+            y: Tọa độ y của nhân vật Dino.
+            texture (Surface): Đối tượng Surface tạo từ hình ảnh của nhân vật Dino.
+        """
+        
         screen.blit(self.texture, (self.x, self.y))
     
+    # Hàm surface
     def set_texture(self):
+        
+        """
+        Chức năng: Phương thức này thiết lập hình ảnh của đối tượng Dino dựa trên số hình ảnh của nó.
+        
+        Input:
+            img_num (int): Số thứ tự hình ảnh được định nghĩa từ 0 đến số cuối cùng của def init
+            
+        Output:
+            Hình ảnh nhân vật Dino
+        """
+        
         self.texture = pygame.image.load(f'assets\img\dino\dino{self.img_num}.png')
         
     def set_sound(self):
+        
+        """
+        Chức năng: Phương thức này thiết lập âm thanh của đối tượng Dino.
+    
+        Input:
+            Tệp âm thanh jump.wav
+            
+        Output:
+            Load âm thanh jump.wav
+        """
+        
         self.sound = pygame.mixer.Sound('assets\sound\jump.wav')
         
     def jump(self):
+        
+        """
+        Chức năng: Phương thức này đổi trạng thái của đối tượng Dino thành trạng thái nhảy và phát âm thanh nhảy.
+        
+        Input:
+            sound: Dùng biến này để lấy âm thanh và phát
+            jumping, running: Giá trị của 2 biến này là boolean và được lấy từ init
+        
+        Output:
+            Trả về biến boolean định nghĩa trạng nhảy của đối tượng Dino
+        """
+        
         self.sound.play()
         self.jumping = True
         self.running = False
         
     def fall(self):
+        
+        """
+        Chức năng: Phương thức này đổi trạng thái của đối tượng Dino thành trạng thái rơi.
+        
+        Input:
+            falling, jumping: Giá trị của 2 biến này là boolean và được lấy từ init
+        
+        Output:
+            Trả về biến boolean định nghĩa trạng rơi của đối tượng Dino
+        """
+        
         self.falling = True
         self.jumping = False
         
     def run(self):
+        
+        """
+        Chức năng: Phương thức này đổi trạng thái của đối tượng Dino thành trạng thái chạy.
+        
+        Input:
+            running, falling: Giá trị của 2 biến này là boolean và được lấy từ init
+        
+        Output:
+            Trả về biến boolean định nghĩa trạng chạy của đối tượng Dino
+        """
+        
         self.running = True
-        self.falling = False   
+        self.falling = False
 
 # Tạo lớp Dino tiến hóa cấp 1
 class Lv1:
     
-    def __init__(self):
+    """
+    Chức năng: Tương tự với class Dino, chỉ khác ở chỗ thay đổi hình ảnh nhân vật Dino tiến hóa thành nhân vật khác khi đạt số điểm nhất định
+    """
+    
+    def __init__(self, dino):
         self.width = 64
         self.height = 68
         self.x = 80
-        self.y = Dino().y
+        self.y = dino.y
         self.img_num = 0
         self.def_y = 7
         self.gra = 1.5 # Biến trọng lực
@@ -126,9 +303,9 @@ class Lv1:
         self.floor = self.y
         self.set_texture()
         self.set_sound()
-        self.show()
         
     def update(self, loop):
+        
         # Trạng thái đang nhảy
         if self.jumping:
             self.y -= self.def_y
@@ -140,7 +317,7 @@ class Lv1:
             self.y += self.gra * self.def_y
             if self.y >= self.floor:
                 self.run()
-        
+                
         # Trạng thái đang chạy
         elif self.running and loop % 4 == 0: # Khi loop bằng 0 thì các giá trị được thực thi
             self.img_num = (self.img_num + 1) % 3 #self.img_num có giá trị lớn hơn 3, nó sẽ được gán lại bằng 0.
@@ -171,11 +348,15 @@ class Lv1:
 # Tạo lớp Dino tiến hóa cấp 2
 class Lv2:
     
-    def __init__(self):
+    """
+    Chức năng: Tương tự với class Dino, chỉ khác ở chỗ thay đổi hình ảnh nhân vật Dino tiến hóa thành nhân vật khác khi đạt số điểm nhất định
+    """
+    
+    def __init__(self, dino):
         self.width = 64
         self.height = 68
         self.x = 80
-        self.y = Dino().y
+        self.y = dino.y
         self.img_num = 0
         self.def_y = 7
         self.gra = 1.5 # Biến trọng lực
@@ -186,7 +367,6 @@ class Lv2:
         self.floor = self.y
         self.set_texture()
         self.set_sound()
-        self.show()
         
     def update(self, loop):
         # Trạng thái đang nhảy
@@ -231,11 +411,15 @@ class Lv2:
 # Tạo lớp Dino tiến hóa cấp 3
 class Lv3:
     
-    def __init__(self):
+    """
+    Chức năng: Tương tự với class Dino, chỉ khác ở chỗ thay đổi hình ảnh nhân vật Dino tiến hóa thành nhân vật khác khi đạt số điểm nhất định
+    """
+    
+    def __init__(self, dino):
         self.width = 64
         self.height = 68
         self.x = 80
-        self.y = Dino().y
+        self.y = dino.y
         self.img_num = 0
         self.def_y = 7
         self.gra = 1.5 # Biến trọng lực
@@ -246,7 +430,6 @@ class Lv3:
         self.floor = self.y
         self.set_texture()
         self.set_sound()
-        self.show()
         
     def update(self, loop):
         # Trạng thái đang nhảy
@@ -291,11 +474,15 @@ class Lv3:
 # Tạo lớp Dino tiến hóa cấp 4
 class Lv4:
     
-    def __init__(self):
+    """
+    Chức năng: Tương tự với class Dino, chỉ khác ở chỗ thay đổi hình ảnh nhân vật Dino tiến hóa thành nhân vật khác khi đạt số điểm nhất định
+    """
+    
+    def __init__(self, dino):
         self.width = 64
         self.height = 68
         self.x = 80
-        self.y = Dino().y
+        self.y = dino.y
         self.img_num = 0
         self.def_y = 7
         self.gra = 1.5 # Biến trọng lực
@@ -306,7 +493,6 @@ class Lv4:
         self.floor = self.y
         self.set_texture()
         self.set_sound()
-        self.show()
         
     def update(self, loop):
         # Trạng thái đang nhảy
@@ -351,7 +537,27 @@ class Lv4:
 # Tạo lớp chướng ngại vật
 class Gun:
     
+    """
+    Chức năng: class này này khởi tạo đối tượng chướng ngại vật là hình viên đạn với chiều rộng là 113, chiều cao là 90, vị trí x là một đối số
+    và vị trí y là 270. Thiết lập hình dạng của súng bằng phương thức 'set_texture()' và hiển thị nó trên màn hình bằng phương thức 'show()'.
+    
+    Args:
+        x: Tọa độ x của viên đạn dùng để tạo vòng lặp.
+    """
+    
     def __init__(self, x):
+        
+        """
+        Chức năng: Đây là phương thức khởi tạo của lớp Gun. Nó khởi tạo các thuộc tính của lớp như chiều rộng, chiều cao, 
+        vị trí x, vị trí y và gọi phương thức set_texture() để đặt load hình ảnh viên đạn.
+        
+        Args:
+            x: Vị trí x ban đầu của viên đạn trên màn hình.
+            
+        Return:
+            None
+        """
+        
         self.width = 113
         self.height = 90
         self.x = x
@@ -360,25 +566,88 @@ class Gun:
         self.show()
     
     def update(self, def_x):
+        
+        """
+        Chức năng: Cập nhật vị trí x của viên đạn theo giá trị def_x.
+        
+        Args:
+            def_x: Vị trí di chuyển của viên đạn.
+            
+        Returns:
+            None
+        """
+        
         self.x += def_x
     
     def show(self):
+        
+        """
+        Chức năng: Sử dụng phương thức blit() của module pygame để hiển thị đối tượng Surface của hình viên đạn lên màn hình tại tọa độ x và y.
+        
+        Attributes:
+            x: Tọa độ x của hình nền.
+            y: Tọa độ y của hình nền.
+            texture (Surface): Đối tượng Surface tạo từ hình ảnh của hình nền.
+        """
+        
         screen.blit(self.texture, (self.x, self.y))
     
     def set_texture(self):
+        
+        """
+        Chức năng: Phương thức này dùng để load hình ảnh chướng ngại vật hình viên đạn vào chương trình.
+        
+        Input:
+            Hình ảnh gun.png
+            
+        Output:
+            Hình ảnh chướng ngại vật hình viên đạn
+        """
+        
         self.texture = pygame.image.load(r'assets\img\obstacle\gun.png')
 
 # Kiểm tra va chạm
 class Collision:
     
+    """
+    Chức năng: class Collision dùng để xử lý va chạm giữa các đối tượng trong game.
+    """
+    
     def between(self, obj1, obj2):
+        
+        """
+        Chức năng: Phương thức này tính khoảng cách giữa obj1 và obj2 sử dụng công thức khoảng cách và trả về giá trị boolean cho biết 
+        khoảng cách có nhỏ hơn 30 hay không. Nếu khoảng cách nhỏ hơn 30 thì xảy ra va chạm.
+        
+        Input:
+            obj1: Đối tượng khủng long.
+            obj2: Đối tượng viên đạn.
+            
+        Output:
+            bool: Trả về True nếu có va chạm, ngược lại trả về False.
+        """
+        
         distance = math.sqrt( (obj1.x - obj2.x)**2 + (obj1.y - obj2.y)**2 )
-        return distance < 50 # Trả về giá trị boolean, nếu khoảng cách nhỏ hơn 50 thì xảy ra va chạm
+        return distance < 30
 
 # Tạo lớp điểm số
 class Score:
     
+    """
+    Chức năng: Class Score quản lý việc hiển thị điểm số và điểm cao nhất trong game.
+    """
+    
     def __init__(self, hscore):
+        
+        """
+        Chức năng: Phương thức khởi tạo của lớp Score. Nó khởi tạo các thuộc tính của lớp như điểm số, điểm cao nhất,
+        font để hiển thị điểm số, font để hiển thị điểm cao nhất và màu chữ, và gọi phương thức 'set_sound()' 
+        để khởi tạo nhạc và phát khi điểm số tăng.
+        
+        Args:
+            hscore (int): Lưu trữ biến điểm cao nhất và hiển thị lại những vòng chơi tiếp theo."
+        """
+        
         self.score = 0
         self.hscore = hscore
         self.font_score = pygame.font.SysFont('monospace', 38, bold=True)
@@ -388,22 +657,70 @@ class Score:
         self.show()
         
     def update(self, loop):
+        
+        """
+        Chức năng: Phương thức này cập nhật điểm mỗi 10 vòng lặp và kiểm tra xem điểm hiện tại có phải là điểm cao nhất hiện tại không.
+        Nó phát ra một âm thanh mỗi 50 điểm.
+
+        Args:
+        loop (int): Số vòng lặp hiện tại.
+
+        Output: Giá trị của loop
+        """
+        
         self.score = loop // 10
         self.check_hscore()
         self.check_sound()
         
     def set_sound(self):
+        
+        """
+        Chức năng: Phương thức này dùng để load âm thanh khi nhân vật đạt mỗi 50 điểm.
+        
+        Input:
+            File âm thanh point.wav
+            
+        Output:
+            Âm thanh khi đạt mỗi 50 điểm
+        """
+        
         self.sound = pygame.mixer.Sound('assets\sound\point.wav')
         
     def check_hscore(self):
+        
+        """
+        Chức năng: Phương thức này kiểm tra xem điểm hiện tại có phải là điểm cao nhất hiện tại không.
+
+        Output: high score hiện tại
+        """
+        
         if self.score >= self.hscore:
             self.hscore = self.score
             
     def check_sound(self):
+        
+        """
+        Chức năng: Hàm này dùng để kiểm tra xem điểm hiện tại đạt mỗi 50 thì nó phát âm thanh.
+        
+        Output:
+            sound: Âm thanh đã load ở hàm set_sound
+        """
+        
         if self.score % 50 == 0 and self.score != 0:
             self.sound.play()
     
     def show(self):
+        
+        """
+        Chức năng: Phương thức này hiển thị điểm cao nhất và điểm hiện tại trên màn hình bằng cách sử dụng phương thức render() của module pygame.
+        
+        Input: None
+        
+        Output:
+            label1: Là điểm số cao nhất hiển thị ở góc phải trên cùng màn hình
+            label2:Là điểm số hiện tại hiển thị ở giữa màn hình
+        """
+        
         self.label1 = self.font_hscore.render(f'High Score: {self.hscore}' , True, self.color)
         self.label2 = self.font_score.render(f'{self.score}m', True, self.color)
         lable_width = self.label1.get_rect().width
@@ -416,10 +733,10 @@ class Game:
     def __init__(self, hscore = 0):
         self.bg = [BG(0), BG(WIDTH)]
         self.dino = Dino()
-        self.lv1 = Lv1()
-        self.lv2 = Lv2()
-        self.lv3 = Lv3()
-        self.lv4 = Lv4()
+        self.lv1 = Lv1(self.dino)
+        self.lv2 = Lv2(self.dino)
+        self.lv3 = Lv3(self.dino)
+        self.lv4 = Lv4(self.dino)
         self.obstacle = []
         self.collision = Collision()
         self.score = Score(hscore)
@@ -499,6 +816,12 @@ class Game:
 
 # Vòng lặp chính của game
 def main():
+    
+    """
+    Chức năng: Phương pháp này là vòng lặp chính của trò chơi nơi tất cả các đối tượng trò chơi được cập nhật và hiển thị trên màn hình. 
+    Tốc độ trò chơi tăng lên sau mỗi 50 điểm. Vòng lặp sẽ kết thúc nếu người chơi va chạm với chướng ngại vật hoặc thoát khỏi trò chơi. 
+    Người chơi cũng có thể khởi động lại trò chơi bằng cách nhấn phím Enter.
+    """
     
     # Objects
     game = Game()
@@ -611,7 +934,23 @@ def main():
 # Tạo màn hình bắt đầu
 class Stcreen:
     
+    """
+    Chức năng: Class để hiển thị màn hình bắt đầu với hình của 2 nhân vật chính là nhân vật Dino và chướng ngại vật gun và nhấp nháy 
+    phông chữ "Nhấn phím bất kì để bắt đầu" để người chơi biết cách bắt đầu chơi trò chơi.
+
+    Attributes:
+        flash (bool): Trạng thái nhấp nháy của phông chữ.
+        sound (pygame.mixer.Sound): Âm thanh bắt đầu khi khởi động game.
+        texture (pygame.Surface): Hình nền.
+    """
+    
     def __init__(self):
+        
+        """
+        Chức năng: Hàm này khởi tạo các thuộc tính của class Streen, bao gồm trạng thái nhấp nháy của phông chữ, âm thanh, 
+        texture và hiển thị tiêu đề trên màn hình.
+        """
+        
         self.flash = True
         self.set_sound()
         self.set_texture()
@@ -619,13 +958,34 @@ class Stcreen:
         self.title()
         
     def set_sound(self):
+        
+        """
+        Chức năng: Phương thức này dùng để load âm thanh khi khởi động trò chơi.
+        
+        Input:
+            File âm thanh start.wav
+            
+        Output:
+            Âm thanh khi khởi động trò chơi.
+        """
+        
         self.sound = pygame.mixer.Sound('assets\sound\start.wav')
         
     def title(self):
+        
+        """
+        Chức năng: Phương thức này dùng để xử lý hiển thị của tiêu đề "Nhấn phím bất kì để bắt đầu". Sau mỗi chu kì 1 giây thì tiêu đề
+        sẽ hiện sau đó ẩn và liên tục trong vòng lặp như vậy tạo nên sự sinh động cho trò chơi.
+        
+        Input: None
+            
+        Output: None
+        """
+        
         # Tính toán chu kỳ nhấp nháy của phông chữ, true là hiện, false là ẩn
         self.current_time = pygame.time.get_ticks()
         
-        if self.current_time % 1000 < 500:
+        if self.current_time % 1000 < 500: # Chữ sẽ nhấp nháy theo chu kì mỗi 1s
             self.flash = True # Chữ hiện
         else:
             self.flash = False # Chữ ẩn
@@ -637,14 +997,35 @@ class Stcreen:
             screen.blit(self.text, (WIDTH // 2 - 140, HEIGHT // 2 + 120))
     
     def show(self):
+        
+        """
+        Chức năng: Hiển thị màn hình khi khởi động game và tiếng âm đầu màn hình cùng với chuỗi nhấp nháy "Nhấn phím bất kì để bắt đầu"
+        """
+        
         screen.blit(self.texture, (0, 0))
         self.sound.play()
         self.title()
 
     def set_texture(self):
+        
+        """
+        Chức năng: Phương thức này dùng để load hình ảnh màn hình bắt đầu vào chương trình.
+        
+        Input:
+            Hình ảnh screen.png
+            
+        Output:
+            Hình ảnh màn hình bắt đầu khi khởi động game
+        """
+        
         self.texture = pygame.image.load(r'assets\img\screen.png')
 
 def menu():
+    
+    """
+    Chức năng: Gọi hàm khởi tạo màn hình khi khởi động game. Khi người dùng nhấn phím, hàm này sẽ dừng âm thanh menu và 
+    chuyển qua hàm main().
+    """
     
     stscreen = Stcreen()
     stscreen.sound.play()
