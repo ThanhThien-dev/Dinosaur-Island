@@ -159,6 +159,7 @@ class Dino:
         self.falling = False # Trạng thái đáp đất
         self.jump_to = 110 # Nhảy đến độ cao
         self.floor = self.y
+        self.lv = 0
         self.set_texture()
         self.set_sound()
         self.show()
@@ -193,8 +194,21 @@ class Dino:
         
         # Trạng thái đang chạy
         elif self.running and loop % 4 == 0: # Điều chỉnh tốc độ hoạt ảnh của nhân vật
-            self.img_num = (self.img_num + 1) % 9 # Giống như một vòng lặp, self.img_num có giá trị lớn hơn 8, nó sẽ được gán lại bằng 0.
-            self.set_texture()
+            if(self.lv == 0):
+                self.img_num = (self.img_num + 1) % 9 # Giống như một vòng lặp, self.img_num có giá trị lớn hơn 8, nó sẽ được gán lại bằng 0.
+                self.set_texture()
+            if(self.lv == 1):
+                self.img_num = (self.img_num + 1) % 3 #self.img_num có giá trị lớn hơn 3, nó sẽ được gán lại bằng 0.
+                self.set_texture()
+            if(self.lv == 2):
+                self.img_num = (self.img_num + 1) % 8 #self.img_num có giá trị lớn hơn 8, nó sẽ được gán lại bằng 0.
+                self.set_texture()
+            if(self.lv == 3):
+                self.img_num = (self.img_num + 1) % 8 #self.img_num có giá trị lớn hơn 8, nó sẽ được gán lại bằng 0.
+                self.set_texture()
+            if(self.lv == 4):
+                self.img_num = (self.img_num + 1) % 5 #self.img_num có giá trị lớn hơn 5, nó sẽ được gán lại bằng 0.
+                self.set_texture()
     
     # Hàm hiển thị
     def show(self):
@@ -222,8 +236,16 @@ class Dino:
         Output:
             Hình ảnh nhân vật Dino
         """
-        
-        self.texture = pygame.image.load(f'assets\img\dino\dino{self.img_num}.png')
+        if(self.lv == 0):
+            self.texture = pygame.image.load(f'assets\img\dino\dino{self.img_num}.png')
+        if(self.lv == 1):
+            self.texture = pygame.image.load(f'assets\img\dino\lv1dino{self.img_num}.png')
+        if(self.lv == 2):
+            self.texture = pygame.image.load(f'assets\img\dino\lv2dino{self.img_num}.png')
+        if(self.lv == 3):
+            self.texture = pygame.image.load(f'assets\img\dino\lv3dino{self.img_num}.png')
+        if(self.lv == 4):
+            self.texture = pygame.image.load(f'assets\img\dino\lv4dino{self.img_num}.png')      
         
     def set_sound(self):
         
@@ -283,259 +305,6 @@ class Dino:
             Trả về biến boolean định nghĩa trạng chạy của đối tượng Dino
         """
         
-        self.running = True
-        self.falling = False
-
-# Tạo lớp Dino tiến hóa cấp 1
-class Lv1:
-    
-    """
-    Chức năng: Tương tự với class Dino, chỉ khác ở chỗ thay đổi hình ảnh nhân vật Dino tiến hóa thành nhân vật khác khi đạt số điểm nhất định
-    """
-    
-    def __init__(self, dino):
-        self.width = 64
-        self.height = 68
-        self.x = 80
-        self.y = dino.y
-        self.img_num = 0
-        self.def_y = 7
-        self.gra = 1.5 # Biến trọng lực
-        self.running = True # Trạng thái đang chạy trên mặt đất
-        self.jumping = False # Trạng thái đang nhảy
-        self.falling = False # Trạng thái đáp đất
-        self.jump_to = 110 # Nhảy đến độ cao
-        self.floor = self.y
-        self.set_texture()
-        self.set_sound()
-        
-    def update(self, loop):
-        
-        # Trạng thái đang nhảy
-        if self.jumping:
-            self.y -= self.def_y
-            if self.y <= self.jump_to:
-                self.fall()
-        
-        # Trạng thái đang đáp đất
-        elif self.falling:
-            self.y += self.gra * self.def_y
-            if self.y >= self.floor:
-                self.run()
-                
-        # Trạng thái đang chạy
-        elif self.running and loop % 4 == 0: # Khi loop bằng 0 thì các giá trị được thực thi
-            self.img_num = (self.img_num + 1) % 3 #self.img_num có giá trị lớn hơn 3, nó sẽ được gán lại bằng 0.
-            self.set_texture()
-    
-    def show(self):
-        screen.blit(self.texture, (self.x, self.y))
-    
-    def set_texture(self):
-        self.texture = pygame.image.load(f'assets\img\dino\lv1dino{self.img_num}.png')
-        
-    def set_sound(self):
-        self.sound = pygame.mixer.Sound('assets\sound\jump.wav')
-        
-    def jump(self):
-        self.sound.play()
-        self.jumping = True
-        self.running = False
-        
-    def fall(self):
-        self.falling = True
-        self.jumping = False
-        
-    def run(self):
-        self.running = True
-        self.falling = False
-        
-# Tạo lớp Dino tiến hóa cấp 2
-class Lv2:
-    
-    """
-    Chức năng: Tương tự với class Dino, chỉ khác ở chỗ thay đổi hình ảnh nhân vật Dino tiến hóa thành nhân vật khác khi đạt số điểm nhất định
-    """
-    
-    def __init__(self, dino):
-        self.width = 64
-        self.height = 68
-        self.x = 80
-        self.y = dino.y
-        self.img_num = 0
-        self.def_y = 7
-        self.gra = 1.5 # Biến trọng lực
-        self.running = True # Trạng thái đang chạy trên mặt đất
-        self.jumping = False # Trạng thái đang nhảy
-        self.falling = False # Trạng thái đáp đất
-        self.jump_to = 110 # Nhảy đến độ cao
-        self.floor = self.y
-        self.set_texture()
-        self.set_sound()
-        
-    def update(self, loop):
-        # Trạng thái đang nhảy
-        if self.jumping:
-            self.y -= self.def_y
-            if self.y <= self.jump_to:
-                self.fall()
-        
-        # Trạng thái đang đáp đất
-        elif self.falling:
-            self.y += self.gra * self.def_y
-            if self.y >= self.floor:
-                self.run()
-        
-        # Trạng thái đang chạy
-        elif self.running and loop % 4 == 0: # Khi loop bằng 0 thì các giá trị được thực thi
-            self.img_num = (self.img_num + 1) % 8 #self.img_num có giá trị lớn hơn 8, nó sẽ được gán lại bằng 0.
-            self.set_texture()
-    
-    def show(self):
-        screen.blit(self.texture, (self.x, self.y))
-    
-    def set_texture(self):
-        self.texture = pygame.image.load(f'assets\img\dino\lv2dino{self.img_num}.png')
-        
-    def set_sound(self):
-        self.sound = pygame.mixer.Sound('assets\sound\jump.wav')
-        
-    def jump(self):
-        self.sound.play()
-        self.jumping = True
-        self.running = False
-        
-    def fall(self):
-        self.falling = True
-        self.jumping = False
-        
-    def run(self):
-        self.running = True
-        self.falling = False
-
-# Tạo lớp Dino tiến hóa cấp 3
-class Lv3:
-    
-    """
-    Chức năng: Tương tự với class Dino, chỉ khác ở chỗ thay đổi hình ảnh nhân vật Dino tiến hóa thành nhân vật khác khi đạt số điểm nhất định
-    """
-    
-    def __init__(self, dino):
-        self.width = 64
-        self.height = 68
-        self.x = 80
-        self.y = dino.y
-        self.img_num = 0
-        self.def_y = 7
-        self.gra = 1.5 # Biến trọng lực
-        self.running = True # Trạng thái đang chạy trên mặt đất
-        self.jumping = False # Trạng thái đang nhảy
-        self.falling = False # Trạng thái đáp đất
-        self.jump_to = 110 # Nhảy đến độ cao
-        self.floor = self.y
-        self.set_texture()
-        self.set_sound()
-        
-    def update(self, loop):
-        # Trạng thái đang nhảy
-        if self.jumping:
-            self.y -= self.def_y
-            if self.y <= self.jump_to:
-                self.fall()
-        
-        # Trạng thái đang đáp đất
-        elif self.falling:
-            self.y += self.gra * self.def_y
-            if self.y >= self.floor:
-                self.run()
-        
-        # Trạng thái đang chạy
-        elif self.running and loop % 4 == 0: # Khi loop bằng 0 thì các giá trị được thực thi
-            self.img_num = (self.img_num + 1) % 8 #self.img_num có giá trị lớn hơn 8, nó sẽ được gán lại bằng 0.
-            self.set_texture()
-    
-    def show(self):
-        screen.blit(self.texture, (self.x, self.y))
-    
-    def set_texture(self):
-        self.texture = pygame.image.load(f'assets\img\dino\lv3dino{self.img_num}.png')
-        
-    def set_sound(self):
-        self.sound = pygame.mixer.Sound('assets\sound\jump.wav')
-        
-    def jump(self):
-        self.sound.play()
-        self.jumping = True
-        self.running = False
-        
-    def fall(self):
-        self.falling = True
-        self.jumping = False
-        
-    def run(self):
-        self.running = True
-        self.falling = False
-        
-# Tạo lớp Dino tiến hóa cấp 4
-class Lv4:
-    
-    """
-    Chức năng: Tương tự với class Dino, chỉ khác ở chỗ thay đổi hình ảnh nhân vật Dino tiến hóa thành nhân vật khác khi đạt số điểm nhất định
-    """
-    
-    def __init__(self, dino):
-        self.width = 64
-        self.height = 68
-        self.x = 80
-        self.y = dino.y
-        self.img_num = 0
-        self.def_y = 7
-        self.gra = 1.5 # Biến trọng lực
-        self.running = True # Trạng thái đang chạy trên mặt đất
-        self.jumping = False # Trạng thái đang nhảy
-        self.falling = False # Trạng thái đáp đất
-        self.jump_to = 110 # Nhảy đến độ cao
-        self.floor = self.y
-        self.set_texture()
-        self.set_sound()
-        
-    def update(self, loop):
-        # Trạng thái đang nhảy
-        if self.jumping:
-            self.y -= self.def_y
-            if self.y <= self.jump_to:
-                self.fall()
-        
-        # Trạng thái đang đáp đất
-        elif self.falling:
-            self.y += self.gra * self.def_y
-            if self.y >= self.floor:
-                self.run()
-        
-        # Trạng thái đang chạy
-        elif self.running and loop % 4 == 0: # Khi loop bằng 0 thì các giá trị được thực thi
-            self.img_num = (self.img_num + 1) % 5 #self.img_num có giá trị lớn hơn 5, nó sẽ được gán lại bằng 0.
-            self.set_texture()
-    
-    def show(self):
-        screen.blit(self.texture, (self.x, self.y))
-    
-    def set_texture(self):
-        self.texture = pygame.image.load(f'assets\img\dino\lv4dino{self.img_num}.png')
-        
-    def set_sound(self):
-        self.sound = pygame.mixer.Sound('assets\sound\jump.wav')
-        
-    def jump(self):
-        self.sound.play()
-        self.jumping = True
-        self.running = False
-        
-    def fall(self):
-        self.falling = True
-        self.jumping = False
-        
-    def run(self):
         self.running = True
         self.falling = False
 
@@ -748,10 +517,6 @@ class Game:
         
         self.bg = [BG(0), BG(WIDTH)]
         self.dino = Dino()
-        self.lv1 = Lv1(self.dino)
-        self.lv2 = Lv2(self.dino)
-        self.lv3 = Lv3(self.dino)
-        self.lv4 = Lv4(self.dino)
         self.obstacle = []
         self.collision = Collision()
         self.score = Score(hscore)
@@ -858,7 +623,6 @@ class Game:
         self.obstacle.append(gun)
 
     def Uplv1(self):
-        
         """
         Chức năng: Hàm dùng để kiểm tra điểm hiện tại có lớn hơn 50 và nhỏ hơn hoặc bằng 100 hay không. Nếu đúng, hàm sẽ trả về 
         giá trị True, ngược lại sẽ trả về False. Nếu True, nhân vật sẽ biến đổi thành đối tượng nhân vật kế tiếp.
@@ -923,10 +687,6 @@ def main():
     # Objects
     game = Game()
     dino = game.dino
-    lv1 = game.lv1
-    lv2 = game.lv2
-    lv3 = game.lv3
-    lv4 = game.lv4
     
     # Variables
     loop = 0
@@ -952,23 +712,23 @@ def main():
             
             # Tiến hóa và tăng độ khó khi đạt mỗi 50 điểm
             if game.Uplv1():
-                dino = lv1
+                dino.lv = 1
                 x += 0.02
                 if x > 70:
                     x = 70
-                print('Giá trị FPS LV1: ',x)
+                #print('Giá trị FPS LV1: ',x)
                 clock.tick(x)
                 
             elif game.Uplv2():
-                dino = lv2
+                dino.lv = 2
                 x += 0.02
                 if x > 80:
                     x = 80
-                print('Giá trị FPS LV2: ',x)
+                #print('Giá trị FPS LV2: ',x)
                 clock.tick(x)
                 
             elif game.Uplv3():
-                dino = lv3
+                dino.lv = 3
                 x += 0.02
                 if x > 90:
                     x = 90
@@ -976,14 +736,14 @@ def main():
                 clock.tick(x)
                 
             elif game.Uplv4():
-                dino = lv4
+                dino.lv = 4
                 x += 0.02
                 print('Giá trị FPS LV4: ',x)
                 clock.tick(x)
                 
             else:
                 x = 60
-                print('Giá trị FPS ban đầu: ',x)
+                #print('Giá trị FPS ban đầu: ',x)
                 clock.tick(x)
             
             # OBSTACLE
@@ -1144,3 +904,4 @@ def menu():
                 main()
 
 menu()
+
